@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { ref, h } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import Unauthorized from '../Components/Shared/Navbars/Unauthorized.vue';
 const props = defineProps({
         title: String,
         ordersProp: {
@@ -16,8 +17,20 @@ const props = defineProps({
     });
 const current = ref(props.pageProp);
 const pageSize = ref(40);
-const orders = ref(props.ordersProp.data);
+const orders = ref(props.ordersProp);
 
+const columns = [
+    {
+        title: 'Folio',
+        dataIndex: 'folio',
+    },
+    {
+        title: 'Numero de muestras',
+        dataIndex: 'numero_muestras',
+    },
+];
+let w = window.innerWidth;
+console.log(w);
 const onShowSizeChange = (current, size) => {
     pageSize.value = size;
 }
@@ -28,16 +41,8 @@ const onChange = async(page, pageSize) =>{
 }
 </script>
 <template>
-    <a-row class="header">
-        <a-col :md="{ span: 24 }">
-            <a-row>
-                <a-col :md="{span:10, offset: 2}">
-                    <h1 :style="{fontSize: '1.4rem'}">Laboratorios de analisis del guadiana</h1>
-                </a-col>
-            </a-row>
-        </a-col>
-    </a-row>
-    
+    <Unauthorized/>
+    <a-table :columns="columns" :data-source="orders" :pagination="false"/>
 </template>
 <style>
     .medium {

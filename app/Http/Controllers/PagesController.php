@@ -11,9 +11,20 @@ class PagesController extends Controller
     //
     public function index ()
     {
-        $orders = Order::paginate(40);
         $totalOrders = Order::count();
         $page = request()->query('page') ? (int) request()->query('page'):1;
+        $pageSize = request()->query('pageSize') ? (int) request()->query('pageSize'):40;
+        $orders = Order::offset($page)
+        ->limit($pageSize)
+        ->get();
+        $orders = $orders->map(function ($order) {
+            return [
+                'key' => $order->id,
+                'folio' => $order->folio,
+                'numero_muestras' => $order->numero_muestras
+            ];
+        });
+
         return Inertia::render('Index', [
             'title' => 'Hello, this is working!',
             'ordersProp' => $orders,
